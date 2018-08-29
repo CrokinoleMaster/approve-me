@@ -1,15 +1,21 @@
 import React, { Component } from 'react'
 
+import './App.css'
+
+import './approve'
+
 class App extends Component {
     render() {
         return (
             <div className="App">
-                <header className="App-header">
-                    <h1 className="App-title">Welcome to React</h1>
+                <header className="row flex-spaces child-borders">
+                    <h1 className="col margin">YES I Approve!</h1>
                 </header>
-                <p className="App-intro">
-                    To get started, edit <code>src/App.js</code> and save to
-                    reload.
+                <p className="row flex-spaces">
+                    <div className="col margin">
+                        To get started, edit <code>src/App.js</code> and save to
+                        reload.
+                    </div>
                 </p>
             </div>
         )
