@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "geopattern": "^1.2.3",
     "octokat": "^0.10.0",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",

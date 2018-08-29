@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 
 import './App.css'
-
 import './approve'
+import { setBackground } from './background'
+
+setBackground('orbital insight')
 
 class App extends Component {
     render() {
