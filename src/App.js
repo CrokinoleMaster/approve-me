@@ -5,6 +5,7 @@ import './App.css'
 import { getRandomThumbsUp } from './utils/thumbnail'
 import { setBackground } from './utils/background'
 import RepoInput from './components/RepoInput'
+import GithubCorner from './components/GithubCorner'
 
 setBackground(
     Math.random()
@@ -17,7 +18,13 @@ class App extends Component {
         return (
             <div className="row">
                 <div className="col sm-12">
-                    <div className="paper">
+                    <div
+                        className="paper"
+                        style={{
+                            position: 'relative'
+                        }}
+                    >
+                        <GithubCorner />
                         <header className="row flex-center">
                             <h2
                                 className="col margin"
