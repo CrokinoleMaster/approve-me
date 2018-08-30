@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 
 import { parseUrl } from '../utils/url'
 
@@ -13,12 +13,16 @@ class UrlInfo extends Component {
             return null
         }
         const urlData = parseUrl(url)
-        console.log(urlData)
         return (
-            <div className="row flex-center">
-                <div className="col sm-4">Owner: {urlData.ownerName}</div>
-                <div className="col sm-4">Repo: {urlData.repoName}</div>
-            </div>
+            <Fragment>
+                <div className="card-header">Repo Info</div>
+                <div className="card-body">
+                    <h4 className="card-title">{urlData.ownerName}</h4>
+                    <h5 className="card-subtitle">{urlData.repoName}</h5>
+                    <p className="card-text">PR# {urlData.id}</p>
+                    <button>Let me go here!</button>
+                </div>
+            </Fragment>
         )
     }
 }

@@ -5,7 +5,7 @@ const parseUrl = url => {
             ownerName: parts[1],
             repoName: parts[2],
             type: parts[3],
-            id: parts[3]
+            id: parts[4]
         }
     } catch (e) {
         console.error(e)

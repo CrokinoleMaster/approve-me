@@ -3,7 +3,6 @@ import React, { Component, Fragment } from 'react'
 import { setBackground } from '../utils/background'
 import { parseUrl } from '../utils/url'
 import UrlInfo from './UrlInfo'
-import PrInfo from './PrInfo'
 
 class RepoInput extends Component {
     constructor(props) {
@@ -123,14 +122,12 @@ class RepoInput extends Component {
                         </div>
                     </div>
                 </div>
-                {!error && (
-                    <div class="card" style="width: 20rem;">
-                        <div class="card-body">
+                {!error &&
+                    prUrl && (
+                        <div className="card sm-8 flex-center row">
                             <UrlInfo url={prUrl} />
-                            <PrInfo url={prUrl} />
                         </div>
-                    </div>
-                )}
+                    )}
             </Fragment>
         )
     }

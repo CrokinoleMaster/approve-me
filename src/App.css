@@ -17,3 +17,23 @@ body {
     margin-top: 1rem;
     padding: 2rem;
 }
+
+html {
+    font-size: 78.3%;
+}
+
+@media (min-width: 60em) {
+    html {
+        font-size: 82.5%;
+    }
+}
+
+@media (min-width: 78em) {
+    html {
+        font-size: 86.6%;
+    }
+}
+
+body {
+    font-size: 1.5rem;
+}
