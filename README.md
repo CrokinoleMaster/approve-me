@@ -4,7 +4,7 @@ Auto Pull Request approval app.
 
 You can add more custom thumbnail images in `src/images/`
 
-Add more review comments in `src/consts/index.js`
+Add more approval messages and review comments in `src/consts/index.js`
 
 ## Build
 

@@ -3,14 +3,26 @@ import { createPortal } from 'react-dom'
 
 import { parseUrl } from '../utils/url'
 import octo from '../utils/octo'
-import { APPROVAL_MESSAGES } from '../consts'
+import {
+    APPROVAL_MESSAGES,
+    REVIEW_COMMENTS,
+    NUM_COMMITS_TO_COMMENT,
+    NUM_FILES_TO_COMMENT,
+    NUM_LINES_TO_COMMENT
+} from '../consts'
 
 const getRandomMessage = () => {
     const messageIndex = Math.round(
         Math.random() * (APPROVAL_MESSAGES.length - 1)
     )
-    console.log(messageIndex)
     return APPROVAL_MESSAGES[messageIndex]
+}
+
+const getRandomComment = () => {
+    const commentIndex = Math.round(
+        Math.random() * (REVIEW_COMMENTS.length - 1)
+    )
+    return REVIEW_COMMENTS[commentIndex]
 }
 
 const getPatchedLines = patch => {
@@ -54,8 +66,12 @@ class UrlInfo extends Component {
         const urlData = parseUrl(url)
         const repo = octo.repos(urlData.ownerName, urlData.repoName)
         const pull = repo.pulls(urlData.id)
+        // comments
         pull.commits.fetch().then(res => {
-            const randomCommits = getRandomSubset(res.items, 2)
+            const randomCommits = getRandomSubset(
+                res.items,
+                NUM_COMMITS_TO_COMMENT
+            )
             randomCommits.forEach(commit => {
                 const commitSha = commit.sha
                 repo.commits(commitSha)
@@ -63,17 +79,20 @@ class UrlInfo extends Component {
                     .then(res => {
                         const randomFiles = getRandomSubset(
                             res.files,
-                            Math.min(res.files.length, 2)
+                            Math.min(res.files.length, NUM_FILES_TO_COMMENT)
                         )
                         randomFiles.forEach(file => {
                             const patchedLines = getPatchedLines(file.patch)
                             const randomLines = getRandomSubset(
                                 patchedLines,
-                                Math.min(patchedLines.length, 3)
+                                Math.min(
+                                    patchedLines.length,
+                                    NUM_LINES_TO_COMMENT
+                                )
                             )
                             randomLines.forEach(lineNumber => {
                                 pull.comments.create({
-                                    body: 'looks good',
+                                    body: getRandomComment(),
                                     commit_id: commitSha,
                                     path: file.filename,
                                     position: lineNumber
