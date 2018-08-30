@@ -2,7 +2,7 @@ import React from 'react'
 
 const GithubCorner = () => (
     <a
-        href="https://your-url"
+        href="https://github.com/huaruiwu/approve-me"
         className="github-corner"
         aria-label="View source on Github"
     >
