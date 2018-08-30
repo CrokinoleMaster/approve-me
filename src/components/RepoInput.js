@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react'
+import { setBackground } from '../utils/background'
 
 class RepoInput extends Component {
     constructor(props) {
@@ -7,12 +8,25 @@ class RepoInput extends Component {
             prUrl: ''
         }
         this.onChangePrUrl = this.onChangePrUrl.bind(this)
+        this.readPrUrl = this.readPrUrl.bind(this)
+    }
+
+    readPrUrl() {
+        const { prUrl } = this.state
+        try {
+            const url = new URL(prUrl)
+            console.log(url)
+        } catch (e) {}
     }
 
     onChangePrUrl(e) {
-        this.setState({
-            prUrl: e.target.value
-        })
+        setBackground(e.target.value)
+        this.setState(
+            {
+                prUrl: e.target.value
+            },
+            this.readPrUrl
+        )
     }
 
     render() {

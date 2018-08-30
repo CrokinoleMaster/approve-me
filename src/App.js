@@ -7,8 +7,11 @@ import { getRandomThumbsUp } from './utils/thumbnail'
 import { setBackground } from './utils/background'
 import RepoInput from './components/RepoInput'
 
-setBackground('orbital insight')
-console.log('public', process.env.PUBLIC_URL)
+setBackground(
+    Math.random()
+        .toString(36)
+        .substr(2, 5)
+)
 
 class App extends Component {
     render() {
