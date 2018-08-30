@@ -1,6 +1,8 @@
 import React, { Component, Fragment } from 'react'
 
 import { setBackground } from '../utils/background'
+import { parseUrl } from '../utils/url'
+import UrlInfo from './UrlInfo'
 import PrInfo from './PrInfo'
 
 class RepoInput extends Component {
@@ -16,10 +18,30 @@ class RepoInput extends Component {
     }
 
     validatePrUrl() {
-        // const { prUrl } = this.state
-        // if (url.hostname !== 'github.com') {
-        //     console.error(`hostname '${url.hostname}' is not github.com`)
-        // }
+        const { prUrl } = this.state
+        const urlData = parseUrl(prUrl)
+        if (prUrl.protocol !== 'https:' && prUrl.protocol !== 'http:') {
+            this.setState({
+                error: new Error(`Unknown protocol '${prUrl.protocol}'`)
+            })
+            return
+        }
+        if (prUrl.hostname !== 'github.com') {
+            this.setState({
+                error: new Error(
+                    `Unknown hostname '${prUrl.hostname}' is not 'github.com'`
+                )
+            })
+            return
+        }
+        if (urlData.type !== 'pull') {
+            this.setState({
+                error: new Error(
+                    `Unknown URL route param '${urlData.type}' is not 'pull'`
+                )
+            })
+            return
+        }
     }
 
     readPrUrl() {
@@ -27,9 +49,12 @@ class RepoInput extends Component {
         if (urlInput.length) {
             try {
                 const prUrl = new URL(urlInput)
-                this.setState({
-                    prUrl
-                })
+                this.setState(
+                    {
+                        prUrl
+                    },
+                    this.validatePrUrl
+                )
             } catch (e) {
                 this.setState({
                     error: e
@@ -98,7 +123,14 @@ class RepoInput extends Component {
                         </div>
                     </div>
                 </div>
-                <PrInfo url={prUrl} />
+                {!error && (
+                    <div class="card" style="width: 20rem;">
+                        <div class="card-body">
+                            <UrlInfo url={prUrl} />
+                            <PrInfo url={prUrl} />
+                        </div>
+                    </div>
+                )}
             </Fragment>
         )
     }

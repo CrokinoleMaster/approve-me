@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 
 import './App.css'
 
-import './utils/approve'
 import { getRandomThumbsUp } from './utils/thumbnail'
 import { setBackground } from './utils/background'
 import RepoInput from './components/RepoInput'
