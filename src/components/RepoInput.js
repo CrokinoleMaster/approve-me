@@ -41,6 +41,16 @@ class RepoInput extends Component {
             })
             return
         }
+        if (!urlData.id || isNaN(urlData.id)) {
+            this.setState({
+                error: new Error(
+                    `Unknown URL route param '${
+                        urlData.id
+                    }' is not a valid PR number`
+                )
+            })
+            return
+        }
     }
 
     readPrUrl() {
