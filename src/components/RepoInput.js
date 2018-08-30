@@ -10,7 +10,9 @@ class RepoInput extends Component {
     }
 
     onChangePrUrl(e) {
-        console.log(e.target.value)
+        this.setState({
+            prUrl: e.target.value
+        })
     }
 
     render() {
