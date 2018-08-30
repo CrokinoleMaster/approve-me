@@ -10,4 +10,4 @@ export const REVIEW_COMMENTS = [
 
 export const NUM_COMMITS_TO_COMMENT = 2
 export const NUM_FILES_TO_COMMENT = 2
-export const NUM_LINES_TO_COMMENT = 3
+export const NUM_LINES_TO_COMMENT = 2

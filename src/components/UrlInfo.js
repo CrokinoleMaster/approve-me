@@ -51,6 +51,14 @@ const getRandomSubset = (arr, n) => {
     return result
 }
 
+async function asyncMap(array, callback) {
+    const promises = []
+    for (let index = 0; index < array.length; index++) {
+        promises.push(await callback(array[index], index, array))
+    }
+    return promises
+}
+
 class UrlInfo extends Component {
     constructor(props) {
         super(props)
@@ -61,50 +69,47 @@ class UrlInfo extends Component {
         this.onClickApprove = this.onClickApprove.bind(this)
     }
 
-    onClickApprove() {
+    async onClickApprove() {
         const { url } = this.props
         const urlData = parseUrl(url)
         const repo = octo.repos(urlData.ownerName, urlData.repoName)
         const pull = repo.pulls(urlData.id)
-        // comments
-        pull.commits.fetch().then(res => {
-            const randomCommits = getRandomSubset(
-                res.items,
-                Math.min(res.items.length, NUM_COMMITS_TO_COMMENT)
-            )
-            randomCommits.forEach(commit => {
-                const commitSha = commit.sha
-                repo.commits(commitSha)
-                    .fetch()
-                    .then(res => {
-                        const randomFiles = getRandomSubset(
-                            res.files,
-                            Math.min(res.files.length, NUM_FILES_TO_COMMENT)
-                        )
-                        randomFiles.forEach(file => {
-                            const patchedLines = getPatchedLines(file.patch)
-                            const randomLines = getRandomSubset(
-                                patchedLines,
-                                Math.min(
-                                    patchedLines.length,
-                                    NUM_LINES_TO_COMMENT
-                                )
-                            )
-                            randomLines.forEach(lineNumber => {
-                                pull.comments.create({
-                                    body: getRandomComment(),
-                                    commit_id: commitSha,
-                                    path: file.filename,
-                                    position: lineNumber
-                                })
-                            })
-                        })
-                    })
-            })
-        })
         this.setState({
             approvePending: true
         })
+
+        // comments
+        const commitsRes = await pull.commits.fetch()
+        const randomCommits = getRandomSubset(
+            commitsRes.items,
+            Math.min(commitsRes.items.length, NUM_COMMITS_TO_COMMENT)
+        )
+
+        await asyncMap(randomCommits, async commit => {
+            const commitSha = commit.sha
+            const res = await repo.commits(commitSha).fetch()
+            const randomFiles = getRandomSubset(
+                res.files,
+                Math.min(res.files.length, NUM_FILES_TO_COMMENT)
+            )
+            return await asyncMap(randomFiles, async file => {
+                const patchedLines = getPatchedLines(file.patch)
+                const randomLines = getRandomSubset(
+                    patchedLines,
+                    Math.min(patchedLines.length, NUM_LINES_TO_COMMENT)
+                )
+                return await asyncMap(randomLines, async lineNumber => {
+                    return await pull.comments.create({
+                        body: getRandomComment(),
+                        commit_id: commitSha,
+                        path: file.filename,
+                        position: lineNumber
+                    })
+                })
+            })
+        })
+
+        // approval
         pull.reviews
             .create({
                 body: getRandomMessage(),
@@ -154,7 +159,7 @@ class UrlInfo extends Component {
                             👍
                             {` `}
                         </span>
-                        Approve
+                        {approvePending ? 'Approving...' : 'Approve'}
                     </button>
                 </div>
 
