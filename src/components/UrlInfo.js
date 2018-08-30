@@ -70,7 +70,7 @@ class UrlInfo extends Component {
         pull.commits.fetch().then(res => {
             const randomCommits = getRandomSubset(
                 res.items,
-                NUM_COMMITS_TO_COMMENT
+                Math.min(res.items.length, NUM_COMMITS_TO_COMMENT)
             )
             randomCommits.forEach(commit => {
                 const commitSha = commit.sha
@@ -102,29 +102,29 @@ class UrlInfo extends Component {
                     })
             })
         })
-        // this.setState({
-        //     approvePending: true
-        // })
-        // pull.reviews
-        //     .create({
-        //         body: getRandomMessage(),
-        //         event: 'APPROVE'
-        //     })
-        //     .then(
-        //         repo => {
-        //             console.log('success')
-        //             this.setState({
-        //                 error: null,
-        //                 approvePending: false
-        //             })
-        //         },
-        //         error => {
-        //             this.setState({
-        //                 error,
-        //                 approvePending: false
-        //             })
-        //         }
-        //     )
+        this.setState({
+            approvePending: true
+        })
+        pull.reviews
+            .create({
+                body: getRandomMessage(),
+                event: 'APPROVE'
+            })
+            .then(
+                repo => {
+                    alert(`You've been approved! 👍`)
+                    this.setState({
+                        error: null,
+                        approvePending: false
+                    })
+                },
+                error => {
+                    this.setState({
+                        error,
+                        approvePending: false
+                    })
+                }
+            )
     }
 
     render() {
