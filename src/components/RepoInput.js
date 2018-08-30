@@ -77,6 +77,7 @@ class RepoInput extends Component {
         this.setState(
             {
                 urlInput: e.target.value,
+                prUrl: null,
                 error: ''
             },
             this.readPrUrl
