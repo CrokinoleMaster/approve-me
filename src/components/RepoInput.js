@@ -1,36 +1,56 @@
 import React, { Component, Fragment } from 'react'
+
 import { setBackground } from '../utils/background'
+import PrInfo from './PrInfo'
 
 class RepoInput extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            prUrl: ''
+            error: '',
+            urlInput: ''
         }
         this.onChangePrUrl = this.onChangePrUrl.bind(this)
         this.readPrUrl = this.readPrUrl.bind(this)
+        this.validatePrUrl = this.validatePrUrl.bind(this)
+    }
+
+    validatePrUrl() {
+        // const { prUrl } = this.state
+        // if (url.hostname !== 'github.com') {
+        //     console.error(`hostname '${url.hostname}' is not github.com`)
+        // }
     }
 
     readPrUrl() {
-        const { prUrl } = this.state
-        try {
-            const url = new URL(prUrl)
-            console.log(url)
-        } catch (e) {}
+        const { urlInput } = this.state
+        if (urlInput.length) {
+            try {
+                const prUrl = new URL(urlInput)
+                this.setState({
+                    prUrl
+                })
+            } catch (e) {
+                this.setState({
+                    error: e
+                })
+            }
+        }
     }
 
     onChangePrUrl(e) {
         setBackground(e.target.value)
         this.setState(
             {
-                prUrl: e.target.value
+                urlInput: e.target.value,
+                error: ''
             },
             this.readPrUrl
         )
     }
 
     render() {
-        const { prUrl } = this.state
+        const { prUrl, urlInput, error } = this.state
         return (
             <Fragment>
                 <div className="row flex-spaces">
@@ -57,17 +77,28 @@ class RepoInput extends Component {
                             </label>
                             <input
                                 type="text"
-                                placeholder="https://github.com/mycompany/myrepo/pull/172"
+                                placeholder="https://github.com/repo_owner/my_repo/pull/172"
                                 id="pr-url"
                                 style={{
                                     width: '100%'
                                 }}
-                                value={prUrl}
+                                value={urlInput}
                                 onChange={this.onChangePrUrl}
                             />
+                            {error && (
+                                <div
+                                    className="alert alert-danger"
+                                    style={{
+                                        marginTop: '0.5rem'
+                                    }}
+                                >
+                                    {error.message}
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
+                <PrInfo url={prUrl} />
             </Fragment>
         )
     }
