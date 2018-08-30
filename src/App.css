@@ -19,18 +19,18 @@ body {
 }
 
 html {
-    font-size: 78.3%;
+    font-size: 82.3%;
 }
 
 @media (min-width: 60em) {
     html {
-        font-size: 82.5%;
+        font-size: 86.5%;
     }
 }
 
 @media (min-width: 78em) {
     html {
-        font-size: 86.6%;
+        font-size: 90.6%;
     }
 }
 

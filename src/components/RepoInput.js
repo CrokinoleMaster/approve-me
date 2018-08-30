@@ -124,7 +124,7 @@ class RepoInput extends Component {
                 </div>
                 {!error &&
                     prUrl && (
-                        <div className="card sm-8 flex-center row">
+                        <div className="card sm-6 md-4 flex-center row">
                             <UrlInfo url={prUrl} />
                         </div>
                     )}

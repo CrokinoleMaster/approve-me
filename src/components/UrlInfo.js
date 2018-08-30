@@ -1,11 +1,15 @@
 import React, { Component, Fragment } from 'react'
 
 import { parseUrl } from '../utils/url'
+import octo from '../utils/octo'
 
 class UrlInfo extends Component {
     constructor(props) {
         super(props)
+        this.onClickApprove = this.onClickApprove.bind(this)
     }
+
+    onClickApprove() {}
 
     render() {
         const { url } = this.props
@@ -20,7 +24,20 @@ class UrlInfo extends Component {
                     <h4 className="card-title">{urlData.ownerName}</h4>
                     <h5 className="card-subtitle">{urlData.repoName}</h5>
                     <p className="card-text">PR# {urlData.id}</p>
-                    <button>Let me go here!</button>
+                    <button
+                        className="btn-large btn-success"
+                        onClick={this.onClickApprove}
+                    >
+                        <span
+                            role="img"
+                            aria-label="thumbs-up"
+                            style={{ fontSize: '2rem' }}
+                        >
+                            👍
+                            {` `}
+                        </span>
+                        Approve
+                    </button>
                 </div>
             </Fragment>
         )
