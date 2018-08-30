@@ -13,6 +13,32 @@ const getRandomMessage = () => {
     return APPROVAL_MESSAGES[messageIndex]
 }
 
+const getPatchedLines = patch => {
+    const lines = patch.split('\n')
+    return lines
+        .map((l, i) => {
+            if (l.indexOf('+') > -1) {
+                return i
+            }
+        })
+        .filter(d => d !== undefined)
+        .slice(1)
+}
+
+const getRandomSubset = (arr, n) => {
+    var result = new Array(n),
+        len = arr.length,
+        taken = new Array(len)
+    if (n > len)
+        throw new RangeError('getRandom: more elements taken than available')
+    while (n--) {
+        var x = Math.floor(Math.random() * len)
+        result[n] = arr[x in taken ? taken[x] : x]
+        taken[x] = --len in taken ? taken[len] : len
+    }
+    return result
+}
+
 class UrlInfo extends Component {
     constructor(props) {
         super(props)
@@ -28,29 +54,58 @@ class UrlInfo extends Component {
         const urlData = parseUrl(url)
         const repo = octo.repos(urlData.ownerName, urlData.repoName)
         const pull = repo.pulls(urlData.id)
-        this.setState({
-            approvePending: true
-        })
-        pull.reviews
-            .create({
-                body: getRandomMessage(),
-                event: 'APPROVE'
+        pull.commits.fetch().then(res => {
+            const randomCommits = getRandomSubset(res.items, 2)
+            randomCommits.forEach(commit => {
+                const commitSha = commit.sha
+                repo.commits(commitSha)
+                    .fetch()
+                    .then(res => {
+                        const randomFiles = getRandomSubset(
+                            res.files,
+                            Math.min(res.files.length, 2)
+                        )
+                        randomFiles.forEach(file => {
+                            const patchedLines = getPatchedLines(file.patch)
+                            const randomLines = getRandomSubset(
+                                patchedLines,
+                                Math.min(patchedLines.length, 3)
+                            )
+                            randomLines.forEach(lineNumber => {
+                                pull.comments.create({
+                                    body: 'looks good',
+                                    commit_id: commitSha,
+                                    path: file.filename,
+                                    position: lineNumber
+                                })
+                            })
+                        })
+                    })
             })
-            .then(
-                repo => {
-                    console.log('success')
-                    this.setState({
-                        error: null,
-                        approvePending: false
-                    })
-                },
-                error => {
-                    this.setState({
-                        error,
-                        approvePending: false
-                    })
-                }
-            )
+        })
+        // this.setState({
+        //     approvePending: true
+        // })
+        // pull.reviews
+        //     .create({
+        //         body: getRandomMessage(),
+        //         event: 'APPROVE'
+        //     })
+        //     .then(
+        //         repo => {
+        //             console.log('success')
+        //             this.setState({
+        //                 error: null,
+        //                 approvePending: false
+        //             })
+        //         },
+        //         error => {
+        //             this.setState({
+        //                 error,
+        //                 approvePending: false
+        //             })
+        //         }
+        //     )
     }
 
     render() {
