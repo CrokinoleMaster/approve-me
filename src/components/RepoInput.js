@@ -109,16 +109,6 @@ class RepoInput extends Component {
                                 value={urlInput}
                                 onChange={this.onChangePrUrl}
                             />
-                            {error && (
-                                <div
-                                    className="alert alert-danger"
-                                    style={{
-                                        marginTop: '0.5rem'
-                                    }}
-                                >
-                                    {error.message}
-                                </div>
-                            )}
                         </div>
                     </div>
                 </div>
@@ -128,6 +118,15 @@ class RepoInput extends Component {
                             <UrlInfo url={prUrl} />
                         </div>
                     )}
+                <div className="row flex-spaces">
+                    <div className="col sm-8" id="error-container">
+                        {error && (
+                            <div className="alert alert-danger">
+                                {error.message}
+                            </div>
+                        )}
+                    </div>
+                </div>
             </Fragment>
         )
     }
