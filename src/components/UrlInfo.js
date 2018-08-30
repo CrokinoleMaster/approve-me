@@ -3,6 +3,15 @@ import { createPortal } from 'react-dom'
 
 import { parseUrl } from '../utils/url'
 import octo from '../utils/octo'
+import { APPROVAL_MESSAGES } from '../consts'
+
+const getRandomMessage = () => {
+    const messageIndex = Math.round(
+        Math.random() * (APPROVAL_MESSAGES.length - 1)
+    )
+    console.log(messageIndex)
+    return APPROVAL_MESSAGES[messageIndex]
+}
 
 class UrlInfo extends Component {
     constructor(props) {
@@ -24,7 +33,7 @@ class UrlInfo extends Component {
         })
         pull.reviews
             .create({
-                body: 'test',
+                body: getRandomMessage(),
                 event: 'APPROVE'
             })
             .then(
