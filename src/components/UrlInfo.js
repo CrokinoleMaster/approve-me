@@ -85,51 +85,62 @@ class UrlInfo extends Component {
             Math.min(commitsRes.items.length, NUM_COMMITS_TO_COMMENT)
         )
 
-        await asyncMap(randomCommits, async commit => {
-            const commitSha = commit.sha
-            const res = await repo.commits(commitSha).fetch()
-            const randomFiles = getRandomSubset(
-                res.files,
-                Math.min(res.files.length, NUM_FILES_TO_COMMENT)
-            )
-            return await asyncMap(randomFiles, async file => {
-                const patchedLines = getPatchedLines(file.patch)
-                const randomLines = getRandomSubset(
-                    patchedLines,
-                    Math.min(patchedLines.length, NUM_LINES_TO_COMMENT)
+        try {
+            await asyncMap(randomCommits, async commit => {
+                const commitSha = commit.sha
+                const res = await repo.commits(commitSha).fetch()
+                const randomFiles = getRandomSubset(
+                    res.files,
+                    Math.min(res.files.length, NUM_FILES_TO_COMMENT)
                 )
-                return await asyncMap(randomLines, async lineNumber => {
-                    return await pull.comments.create({
-                        body: getRandomComment(),
-                        commit_id: commitSha,
-                        path: file.filename,
-                        position: lineNumber
+                return await asyncMap(randomFiles, async file => {
+                    if (!file.patch || !file.additions) {
+                        return
+                    }
+                    const patchedLines = getPatchedLines(file.patch)
+                    const randomLines = getRandomSubset(
+                        patchedLines,
+                        Math.min(patchedLines.length, NUM_LINES_TO_COMMENT)
+                    )
+                    return await asyncMap(randomLines, async lineNumber => {
+                        return await pull.comments.create({
+                            body: getRandomComment(),
+                            commit_id: commitSha,
+                            path: file.filename,
+                            position: lineNumber
+                        })
                     })
                 })
             })
-        })
+        } catch (e) {}
 
         // approval
-        pull.reviews
-            .create({
-                body: getRandomMessage(),
-                event: 'APPROVE'
-            })
-            .then(
-                repo => {
-                    alert(`You've been approved! 👍`)
-                    this.setState({
-                        error: null,
-                        approvePending: false
-                    })
-                },
-                error => {
-                    this.setState({
-                        error,
-                        approvePending: false
-                    })
-                }
-            )
+        try {
+            pull.reviews
+                .create({
+                    body: getRandomMessage(),
+                    event: 'APPROVE'
+                })
+                .then(
+                    repo => {
+                        alert(`You've been approved! 👍`)
+                        this.setState({
+                            error: null,
+                            approvePending: false
+                        })
+                    },
+                    error => {
+                        this.setState({
+                            error,
+                            approvePending: false
+                        })
+                    }
+                )
+        } catch (e) {}
+        this.setState({
+            error: null,
+            approvePending: false
+        })
     }
 
     render() {
