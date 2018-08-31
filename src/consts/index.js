@@ -5,7 +5,10 @@ export const APPROVAL_MESSAGES = [
 
 export const REVIEW_COMMENTS = [
     'this makes sense',
-    'exactly what I was going to do'
+    'exactly what I was going to do',
+    `couldn't have written it better myself`,
+    'you are simply a genius!',
+    'this code belongs in a museum!'
 ]
 
 export const NUM_COMMITS_TO_COMMENT = 3
