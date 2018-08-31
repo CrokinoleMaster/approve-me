@@ -1,6 +1,9 @@
 export const APPROVAL_MESSAGES = [
     'wow good code! 👍',
-    'just what we needed! 👍'
+    'just what we needed! 👍',
+    'perfection! 👌',
+    'so nice and so fast! 👏'
+    'you did it! 💯'
 ]
 
 export const REVIEW_COMMENTS = [
@@ -8,7 +11,10 @@ export const REVIEW_COMMENTS = [
     'exactly what I was going to do',
     `couldn't have written it better myself`,
     'you are simply a genius!',
-    'this code belongs in a museum!'
+    'this code belongs in a museum!',
+    'drivkin would be proud',
+    'I will definitely use this',
+    'brought a tear to my eye'
 ]
 
 export const NUM_COMMITS_TO_COMMENT = 3
