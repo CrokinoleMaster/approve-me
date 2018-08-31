@@ -103,12 +103,16 @@ class UrlInfo extends Component {
                         Math.min(patchedLines.length, NUM_LINES_TO_COMMENT)
                     )
                     return await asyncMap(randomLines, async lineNumber => {
-                        return await pull.comments.create({
-                            body: getRandomComment(),
-                            commit_id: commitSha,
-                            path: file.filename,
-                            position: lineNumber
-                        })
+                        try {
+                            return await pull.comments.create({
+                                body: getRandomComment(),
+                                commit_id: commitSha,
+                                path: file.filename,
+                                position: lineNumber
+                            })
+                        } catch (e) {
+                            return
+                        }
                     })
                 })
             })
@@ -136,11 +140,12 @@ class UrlInfo extends Component {
                         })
                     }
                 )
-        } catch (e) {}
-        this.setState({
-            error: null,
-            approvePending: false
-        })
+        } catch (e) {
+            this.setState({
+                error: e,
+                approvePending: false
+            })
+        }
     }
 
     render() {
