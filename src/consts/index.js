@@ -2,7 +2,7 @@ export const APPROVAL_MESSAGES = [
     'wow good code! 👍',
     'just what we needed! 👍',
     'perfection! 👌',
-    'so nice and so fast! 👏'
+    'so nice and so fast! 👏',
     'you did it! 💯'
 ]
 
