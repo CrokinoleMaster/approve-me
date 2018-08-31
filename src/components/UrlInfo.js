@@ -79,13 +79,12 @@ class UrlInfo extends Component {
         })
 
         // comments
-        const commitsRes = await pull.commits.fetch()
-        const randomCommits = getRandomSubset(
-            commitsRes.items,
-            Math.min(commitsRes.items.length, NUM_COMMITS_TO_COMMENT)
-        )
-
         try {
+            const commitsRes = await pull.commits.fetch()
+            const randomCommits = getRandomSubset(
+                commitsRes.items,
+                Math.min(commitsRes.items.length, NUM_COMMITS_TO_COMMENT)
+            )
             await asyncMap(randomCommits, async commit => {
                 const commitSha = commit.sha
                 const res = await repo.commits(commitSha).fetch()
